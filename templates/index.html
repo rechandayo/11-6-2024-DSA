@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Job Application Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Job Application Manager</h1>
+    <div>
+        <a href="{{ url_for('add_application') }}">Add New Application</a>
+        <a href="{{ url_for('view_applications', filter_type='salary') }}">Sort by Salary in Php</a>
+        <a href="{{ url_for('view_applications', filter_type='date') }}">Sort by Date Applied</a>
+        <a href="{{ url_for('view_applications', filter_type='stage') }}">Sort by Stage</a>
+        <a href="{{ url_for('view_applications', filter_type='priority') }}">High Priority</a>
+        <a href="{{ url_for('view_applications', filter_type='deadline') }}">Upcoming Deadlines</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <h2>All Applications</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Salary</th>
+            <th>Date Applied</th>
+            <th>Deadline</th>
+            <th>Stage</th>
+            <th>Actions</th>
+        </tr>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app['title'] }}</td>
+            <td>{{ app['company'] }}</td>
+            <td>{{ app['salary'] }}</td>
+            <td>{{ app['date_applied'] }}</td>
+            <td>{{ app['deadline'] }}</td>
+            <td>{{ app['stage'] }}</td>
+            <td>
+                <form action="{{ url_for('delete_application', id=app['id']) }}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this application?');">Delete</button>
+                </form>
+                <form action="{{ url_for('update_stage', id=app['id']) }}" method="post" style="display:inline;">
+                    <select name="stage" required>
+                        <option value="Applied" {% if app['stage'] == 'Applied' %}selected{% endif %}>Applied</option>
+                        <option value="Interview" {% if app['stage'] == 'Interview' %}selected{% endif %}>Interview</option>
+                        <option value="Offer" {% if app['stage'] == 'Offer' %}selected{% endif %}>Offer</option>
+                        <option value="Rejected" {% if app['stage'] == 'Rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                    <button type="submit">Update Stage</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
